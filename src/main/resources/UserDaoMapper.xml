@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.UserDao">
+	<select id="selectOne" resultType="User">
+        select uid, uname, age, salary, dept, email, mobile, addr FROM t_user WHERE uid=#{uid}
+    </select>
+    <insert id="insertUser">
+        INSERT INTO t_user VALUES (NULL , #{uname}, #{age}, #{salary}, #{dept}, #{email}, #{mobile}, #{addr})
+    </insert>
+    <delete id="deleteUser">
+        delete from t_user WHERE uid=#{uid}
+    </delete>
+    <update id="updateUser">
+        UPDATE t_user SET uname=#{uname}, age=#{age}, salary=#{salary}, dept= #{dept}, email=#{email}, mobile=#{mobile}, addr=#{addr} WHERE uid=#{uid}
+    </update>
+    <select id="selectAll" resultType="User">
+        SELECT uid, uname, age, salary, dept, email, mobile, addr FROM t_user
+        <if test="dept!=null">
+            where dept=#{dept}
+        </if>
+         limit #{page.firstRow},#{page.pageSize}
+    </select>
+    <select id="selectRows" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM t_user
+        <if test="dept!=null">
+            where dept=#{dept}
+        </if>
+    </select>
+
+</mapper>

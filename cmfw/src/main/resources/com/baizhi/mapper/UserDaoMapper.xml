@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.UserDao">
+    
+    <resultMap id="um" type="User" autoMapping="true">
+        <id property="userId" column="userId"/>
+        <result property="img" column="userImg"/>
+        <association property="lama" javaType="Lama">
+            <id property="lamaId" column="lama_id"/>
+            <result property="lamaName" column="lama_name"/>
+        </association>
+
+    </resultMap>
+    
+	<select id="selectUser" resultMap="um">
+      SELECT userId, realname, faName, email, mobile, password, sex, addr, u.img userImg, sign, status, salt, regTime, lastlogTime, l.lama_id,l.lama_name from user u left JOIN lama l ON u.lamaId=l.lama_id WHERE u.userId=#{userId}
+    </select>
+
+
+    <update id="updateUser">
+       UPDATE user SET  status=#{status}   WHERE userId=#{userId};
+    </update>
+    <select id="selectUsers" resultMap="um">
+        SELECT userId, realname, faName, email, mobile, password, sex, addr, u.img userImg, sign, status, salt, regTime, lastlogTime, l.lama_id,l.lama_name from user u left JOIN lama l ON u.lamaId=l.lama_id limit #{firstRow},#{pageSize}
+    </select>
+    <select id="selectTotal" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM user
+    </select>
+
+    <select id="findUserByCondition" resultType="User">
+        SELECT ${condition} FROM user
+    </select>
+<!--,-->
+    <insert id="insertUsers">
+        INSERT INTO user VALUES
+        <foreach collection="list" separator=","  item="user">
+            (#{user.userId}, #{user.realname}, #{user.faName} ,#{user.email},#{user.mobile}, #{user.password}, #{user.sex}, #{user.addr}, #{user.img}, #{user.sign}, #{user.status},#{user.salt},#{user.regTime}, #{user.lastlogTime},NULL )
+        </foreach>
+    </insert>
+
+
+    <select id="selectManUser" resultType="User">
+        select sex,count(sex) count,addr from user where sex='m' group by addr;
+    </select>
+
+    <select id="selectWomanUser" resultType="User">
+        select sex,count(sex) count,addr from user where sex='f' group by addr;
+    </select>
+
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.MenuDao">
+    <resultMap id="md" type="Menu">
+        <id column="menuId1" property="menuId"/>
+        <result column="title1" property="title"/>
+        <result column="path1" property="path"/>
+        <result column="iconname1" property="iconname"/>
+        <collection property="menus" ofType="Menu">
+            <id column="menuId2" property="menuId"/>
+            <result column="title2" property="title"/>
+            <result column="path2" property="path"/>
+            <result column="iconname2" property="iconname"/>
+
+        </collection>
+    </resultMap>
+	<!--<select id="selectOne" resultType="User">
+        select uid, uname, age, salary, dept, email, mobile, addr FROM t_user WHERE uid=#{uid}
+    </select>-->
+    <insert id="insertMenu">
+        INSERT INTO menu VALUES (#{menuId}, #{title}, #{path}, #{iconname}, #{parent.menuId});
+    </insert>
+   <!-- <delete id="deleteUser">
+    delete from t_user WHERE uid=#{uid}
+</delete>
+    <update id="updateUser">
+    UPDATE t_user SET uname=#{uname}, age=#{age}, salary=#{salary}, dept= #{dept}, email=#{email}, mobile=#{mobile}, addr=#{addr} WHERE uid=#{uid}
+</update>-->
+    <select id="selectMenus" resultMap="md">
+         SELECT
+         f.menu_id menuId1,
+         f.title title1,
+         f.path path1,
+         f.iconname iconname1,
+         z.menu_id menuId2,
+         z.title title2,
+         z.path path2,
+         z.iconname iconname2,
+         z.parent_id parentId FROM menu z inner join menu f on f.menu_id=z.parent_id;
+    </select>
+
+</mapper>

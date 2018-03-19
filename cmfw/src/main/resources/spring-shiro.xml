@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+
+        <!--安全管理器-->
+        <property name="securityManager" ref="webSecurityManager"/>
+
+    </bean>
+
+
+    <!--安全管理器-->
+    <bean id="webSecurityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="md5Realm"/>
+        <property name="rememberMeManager" ref="rememberMeManager"/>
+    </bean>
+
+    <!--声明记住我管理器-->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <property name="cookie" ref="simpleCookie"/>
+    </bean>
+
+
+
+    <bean id="simpleCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <property name="name" value="rememberMe"/>
+        <property name="maxAge" value="604800"/>
+        <property name="path" value="/"/>
+    </bean>
+
+    <!--hash的凭证匹配器-->
+    <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+        <property name="hashAlgorithmName" value="md5"/>
+        <property name="hashIterations" value="512"/>
+    </bean>
+
+    <!--自定义realm-->
+    <bean id="md5Realm" class="com.baizhi.realm.Md5Realm">
+        <property name="credentialsMatcher" ref="credentialsMatcher"/>
+    </bean>
+
+</beans>

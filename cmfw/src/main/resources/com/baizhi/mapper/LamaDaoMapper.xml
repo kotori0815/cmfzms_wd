@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.LamaDao">
+    <resultMap id="ld" type="Lama" autoMapping="true">
+        <id column="lama_id" property="lamaId"/>
+        <id column="lama_name" property="lamaName"/>
+    </resultMap>
+
+	<select id="selectLama" resultMap="ld">
+      SELECT lama_id, lama_name FROM lama WHERE lama_id=#{lamaId}
+    </select>
+    <select id="selectLamas" resultMap="ld">
+        SELECT lama_id, lama_name, img FROM lama  limit #{firstRow},#{pageSize}
+    </select>
+    <insert id="insertLama">
+        INSERT INTO lama VALUES (#{lamaId}, #{lamaName}, #{img});
+    </insert>
+    <update id="updateLama">
+        UPDATE lama SET lama_name=#{lamaName}, img=#{img} WHERE lama_id=#{lamaId};
+    </update>
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select count(*) from lama;
+    </select>
+
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.WorkDao">
+    <resultMap id="wr" type="Work" autoMapping="true">
+        <id property="workId" column="work_id"/>
+        <result property="workName" column="work_name"/>
+        <association property="user" javaType="User">
+            <id property="userId" column="user_id"/>
+            <result property="realname" column="realname"/>
+        </association>
+    </resultMap>
+
+	<select id="selectWork" resultMap="wr">
+        select work_id,work_name,type,u.user_id,u.realname FROM work w LEFT JOIN user u ON w.user_id=u.user_id WHERE u.user_id=#{userId}
+    </select>
+
+
+
+    <update id="updateUser">
+        UPDATE work_name=#{work_name} WHERE work_id=#{workId};
+    </update>
+    <select id="selectWorks" resultMap="wr">
+        select work_id,work_name,type,u.user_id,u.realname FROM work w LEFT JOIN user u ON w.user_id=u.user_id limit #{firstRow},#{pageSize}
+    </select>
+    <select id="selectTotal" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM work
+    </select>
+
+</mapper>

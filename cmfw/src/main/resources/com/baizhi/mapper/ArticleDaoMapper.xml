@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.ArticleDao">
+    <resultMap id="article" type="Article" autoMapping="true">
+        <id property="articleId" column="article_id"/>
+        <result property="publishTime" column="publish_time"/>
+        <result property="createTime" column="create_time"/>
+        <association property="lama" javaType="Lama">
+            <id property="lamaId" column="lama_id"/>
+            <result column="lama_name" property="lamaName"/>
+        </association>
+    </resultMap>
+	<select id="selectArticle" resultMap="article">
+      SELECT  article_id, title, publish_time, status, context, l.lama_id, create_time,l.lama_name FROM article a left join lama l on a.lama_id=l.lama_id WHERE article_id=#{arcileId}
+    </select>
+    <insert id="insertArticle">
+      INSERT INTO article VALUES (#{articleId}, #{title}, NULL ,  #{context}, #{lama.lamaId}, sysdate(),#{status});
+    </insert>
+    <update id="updateArticle">
+      UPDATE article SET  title=#{title}, publish_time=sysdate(), context=#{context}, status=#{status} WHERE article_id=#{articleId};
+    </update>
+    <select id="selectArticles" resultMap="article">
+      SELECT  article_id, title, publish_time, status, context,  l.lama_id, create_time,l.lama_name FROM article a left join lama l on a.lama_id=l.lama_id limit #{firstRow},#{pageSize}
+    </select>
+    <select id="selectTotal" resultType="java.lang.Integer">
+      SELECT COUNT(*) FROM article
+    </select>
+
+
+</mapper>
